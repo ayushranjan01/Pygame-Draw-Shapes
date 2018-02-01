@@ -1,0 +1,80 @@
+import pygame
+
+pygame.init()
+
+colours = {"BK" : (0, 0, 0), 
+           "WT" : (255, 255, 255),
+           "GR" : (0, 255, 0), 
+           "RD" : (255, 0, 0), 
+           "BL" : (0, 0, 255), 
+           "YW" : (255, 255, 0) 
+           }
+
+size = (750, 750)
+screen = pygame.display.set_mode(size)
+
+pygame.display.set_caption("My Picture")
+
+done = False
+
+clock = pygame.time.Clock()
+
+screen.fill(colours["BK"])
+
+shapesfile = open("shapes.txt", "r")
+
+counter = 0
+
+while (counter == 0):
+    
+    shapetype = shapesfile.readline()
+    
+    if (shapetype == "ENDENDEND\n"):
+        counter = 1
+
+    if (shapetype == "CIRCLE\n"):
+        shapexy = shapesfile.readline()
+        shapexy = shapexy.rstrip("\n")
+        numlist = shapexy.split("$")
+        shapex = numlist[0]
+        shapey = numlist[1]
+        shapex = int(shapex)
+        shapey = int(shapey)    
+        shape_radius = shapesfile.readline()
+        shape_radius = shape_radius.rstrip("\n")
+        shape_radius = int(shape_radius)
+        circlecolor = shapesfile.readline()
+        circlecolor = circlecolor.rstrip("\n")
+        pygame.draw.circle(screen, (colours[circlecolor]), [shapex, shapey], shape_radius, 0)
+                
+    if (shapetype == "RECTANGLE\n"):
+        shape_right_xy = shapesfile.readline()
+        shape_right_xy = shape_right_xy.rstrip("\n")
+        numlist = shape_right_xy.split("$")
+        shape_right_x = numlist[0]
+        shape_right_y = numlist[1]
+        shape_right_x = int(shape_right_x)
+        shape_right_y = int(shape_right_y)
+        shapew = shapesfile.readline()
+        shapew = shapew.rstrip("\n")
+        shapew = int(shapew)
+        shapeh = shapesfile.readline()
+        shapeh = shapeh.rstrip("\n")
+        shapeh = int(shapeh)
+        shape_right_x = (shape_right_x - shapew)
+        rectcolor = shapesfile.readline()
+        rectcolor = rectcolor.rstrip("\n")
+        pygame.draw.rect(screen, (colours[rectcolor]), [shape_right_x, shape_right_y, shapew, shapeh], 0)
+
+shapesfile.close()
+pygame.display.flip()
+
+while not done:
+    
+    for event in pygame.event.get(): 
+        if event.type == pygame.QUIT: 
+            done = True
+    
+    clock.tick(60)
+
+pygame.quit()
